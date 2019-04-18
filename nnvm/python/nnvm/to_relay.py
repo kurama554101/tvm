@@ -316,6 +316,11 @@ def _collapse_sum(children, attrs, odtype='float32'):
     return op.collapse_sum_like(children[0], children[1])
 
 
+def _reorg_yolo(children, attrs, odtype='float32'):
+    stride = attrs.get_int("stride")
+    return op.vision.yolo_reorg(children[0], stride)
+
+
 def _not_implemented(new_op):
     def _impl(children, attrs, odtype='float32'):
         raise NotImplementedError(str(new_op) + " is not implemented.")
@@ -334,6 +339,7 @@ NNVM_OP_2_RELAY_OP = {
     'transpose': _transpose,
     'dropout': _dropout,
     'mean': _mean,
+    'reorg_yolo': _reorg_yolo,
     # Addition
     '__add_scalar__': _binop_scalar(op.add),
     'broadcast_add' : _rename(op.add),
